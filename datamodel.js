@@ -1,4 +1,3 @@
-
 /*
 
 Appropach for Data Loading
@@ -7,12 +6,18 @@ Every Module should have capabilities to load meta and data.  Both should return
 
 */
 
-var DataModel = Backbone.Model.extend({
-  loadMetaData:function (optionalArguments) {
-		 return this.getRequestDeffered(this.getMetaRequests()).promise;
+var BaseModel = Backbone.Model.extend({
+	loadMetaData:function (optionalArguments) {
+		 if(!this._metaDataLoaded){			
+		 	this._metaDataLoaded = this.getRequestDeffered(this.getMetaRequests());
+		 }
+		 return this._metaDataLoaded.promise;
 	},
 	loadModelData:function(){
-		return this.getRequestDeffered(this.getDataRequests()).promise;
+		if(!this._modelDataLoaded){			
+		 	this._modelDataLoaded = this.getRequestDeffered(this.getDataRequests());
+		 }
+		return this._modelDataLoaded.promise;
 	},
 	getMetaRequests:function(){
 		return this.options.metaRequests || [];
@@ -34,5 +39,16 @@ var DataModel = Backbone.Model.extend({
 	},
 	loadData:function(){
 		return $.when.apply(null,[this.loadMetaData(), this.loadModelData()]);
+	},
+	clearMetaData:function(){
+		this._metaDataLoaded = null;
+		
+	},
+	clearModelData:function(){
+		this._modelDataLoaded = null;
+	},
+	clearData:function(){
+		this.clearMetaData();
+		this.clearModelData();
 	}
-})
+});
