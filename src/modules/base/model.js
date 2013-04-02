@@ -1,11 +1,5 @@
-/*
 
-Appropach for Data Loading
-
-Every Module should have capabilities to load meta and data.  Both should return promisses which can be watched out for the status of the loading.
-
-*/
-
+define(['app'],function(){
 var BaseModel = Backbone.Model.extend({
 	loadMetaData:function (optionalArguments) {
 		 if(!this._metaDataLoaded){			
@@ -51,4 +45,6 @@ var BaseModel = Backbone.Model.extend({
 		this.clearMetaData();
 		this.clearModelData();
 	}
+});
+
 });
